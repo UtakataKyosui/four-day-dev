@@ -1,0 +1,7 @@
+$schema: "https://moonrepo.dev/schemas/project.json"
+
+tasks:
+  check:
+    command: python3 -m py_compile health_agent.py
+    inputs:
+      - health_agent.py

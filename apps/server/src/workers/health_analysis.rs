@@ -13,16 +13,6 @@ pub struct HealthAnalysisArgs {
     pub date: String,
 }
 
-#[derive(Deserialize, Debug)]
-struct AgentAnalysisResponse {
-    meal_score: i32,
-    sleep_score: i32,
-    overall_score: i32,
-    summary: String,
-    recommendations: serde_json::Value,
-    usage: Option<serde_json::Value>,
-}
-
 #[async_trait]
 impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
     fn build(ctx: &AppContext) -> Self {
@@ -61,7 +51,7 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
             .find(|s| s.is_main_sleep)
             .or_else(|| sleep_records.first());
 
-        // Build payload for Agent Service
+        // Build payload for Python agent
         let meals_payload: Vec<serde_json::Value> = meals
             .iter()
             .map(|m| {
@@ -90,26 +80,17 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
             "sleep": sleep_payload,
         });
 
-        let agent_url = std::env::var("AGENT_SERVICE_URL")
-            .unwrap_or_else(|_| "http://localhost:8081".to_string());
-
-        let client = reqwest::Client::new();
-        let response = client
-            .post(format!("{}/analyze", agent_url))
-            .json(&serde_json::json!({
-                "date": args.date,
-                "meals": input_snapshot["meals"],
-                "sleep": input_snapshot["sleep"],
-            }))
-            .timeout(std::time::Duration::from_secs(120))
-            .send()
-            .await;
+        let response = crate::services::python_agent::analyze_health(
+            crate::services::python_agent::HealthAgentRequest {
+                date: args.date.clone(),
+                meals: meals_payload,
+                sleep: sleep_payload,
+            },
+        )
+        .await;
 
         match response {
-            Ok(resp) if resp.status().is_success() => {
-                let agent_result: AgentAnalysisResponse =
-                    resp.json().await.map_err(|e| Error::Any(e.into()))?;
-
+            Ok(agent_result) => {
                 let usage = agent_result.usage.unwrap_or_default();
                 let prompt_tokens = usage["prompt_tokens"].as_i64().unwrap_or(0) as i32;
                 let completion_tokens = usage["completion_tokens"].as_i64().unwrap_or(0) as i32;
@@ -123,22 +104,15 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
                         agent_result.summary,
                         agent_result.recommendations,
                         input_snapshot,
-                        "claude-haiku-4-5".to_string(),
+                        std::env::var("ANTHROPIC_MODEL")
+                            .unwrap_or_else(|_| "claude-haiku-4-5-20251001".to_string()),
                         prompt_tokens,
                         completion_tokens,
                     )
                     .await?;
             }
-            Ok(resp) => {
-                let status = resp.status();
-                let body = resp.text().await.unwrap_or_default();
-                tracing::error!("Agent service failed: {} - {}", status, body);
-                analysis
-                    .mark_failed(&self.ctx.db, &format!("Agent service error: {}", status))
-                    .await?;
-            }
             Err(e) => {
-                tracing::error!("Agent service request error: {}", e);
+                tracing::error!("Python agent execution error: {}", e);
                 analysis.mark_failed(&self.ctx.db, &e.to_string()).await?;
             }
         }

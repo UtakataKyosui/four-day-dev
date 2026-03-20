@@ -27,3 +27,6 @@ target/
 
 # Next.js
 .next/
+**/out
+**/dist
+__pycache__/

@@ -7,12 +7,12 @@ logger:
 server:
   port: {{ get_env(name="PORT", default="5150") }}
   binding: "0.0.0.0"
-  host: {{ get_env(name="FRONTEND_URL", default="https://your-app.pages.dev") }}
+  host: {{ get_env(name="FRONTEND_URL", default="http://localhost:5150") }}
   middlewares:
     cors:
       enable: true
       allow_origins:
-        - {{ get_env(name="FRONTEND_URL", default="https://your-app.pages.dev") }}
+        - {{ get_env(name="FRONTEND_URL", default="http://localhost:5150") }}
       allow_headers:
         - content-type
         - authorization
@@ -24,6 +24,16 @@ server:
         - DELETE
         - OPTIONS
       max_age: 3600
+    fallback:
+      enable: false
+    static:
+      enable: true
+      must_exist: true
+      precompressed: false
+      folder:
+        uri: "/"
+        path: "frontend/dist"
+      fallback: "frontend/dist/index.html"
 
 workers:
   mode: BackgroundAsync
