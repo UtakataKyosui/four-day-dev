@@ -1,6 +1,5 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
-type: application
 language: typescript
 
 tasks:
@@ -11,7 +10,8 @@ tasks:
 
   dev:
     command: pnpm dev
-    local: true
+    options:
+      runInCI: false
 
   lint:
     command: pnpm lint
@@ -21,9 +21,10 @@ tasks:
 
   format:
     command: pnpm format
-    local: true
+    options:
+      runInCI: false
 
-  test:e2e:
+  test-e2e:
     command: pnpm test:e2e
     inputs:
       - e2e/**/*

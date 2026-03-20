@@ -1,12 +1,12 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
-type: application
 language: typescript
 
 tasks:
   dev:
     command: pnpm dev
-    local: true
+    options:
+      runInCI: false
 
   build:
     command: pnpm build
@@ -17,7 +17,8 @@ tasks:
     command: pnpm start
     deps:
       - build
-    local: true
+    options:
+      runInCI: false
 
   lint:
     command: pnpm lint

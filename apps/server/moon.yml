@@ -1,6 +1,5 @@
 $schema: 'https://moonrepo.dev/schemas/project.json'
 
-type: application
 language: rust
 
 tasks:
@@ -21,7 +20,8 @@ tasks:
 
   format:
     command: cargo fmt --check
-    local: true
+    options:
+      runInCI: false
 
   test:
     command: cargo test
