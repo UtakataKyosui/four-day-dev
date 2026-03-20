@@ -1,0 +1,35 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+type: application
+language: typescript
+
+tasks:
+  build:
+    command: pnpm build
+    outputs:
+      - .next
+
+  dev:
+    command: pnpm dev
+    local: true
+
+  lint:
+    command: pnpm lint
+
+  typecheck:
+    command: pnpm typecheck
+
+  format:
+    command: pnpm format
+    local: true
+
+  test:e2e:
+    command: pnpm test:e2e
+    inputs:
+      - e2e/**/*
+      - playwright.config.ts
+      - app/**/*.{ts,tsx}
+      - components/**/*.{ts,tsx}
+      - lib/**/*.ts
+    env:
+      CI: 'true'

@@ -1,0 +1,32 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+type: application
+language: rust
+
+tasks:
+  build:
+    command: cargo build
+    inputs:
+      - src/**/*.rs
+      - migration/src/**/*.rs
+      - Cargo.toml
+      - Cargo.lock
+
+  lint:
+    command: cargo clippy -- -D warnings
+    inputs:
+      - src/**/*.rs
+      - migration/src/**/*.rs
+      - Cargo.toml
+
+  format:
+    command: cargo fmt --check
+    local: true
+
+  test:
+    command: cargo test
+    inputs:
+      - src/**/*.rs
+      - migration/src/**/*.rs
+      - Cargo.toml
+      - Cargo.lock
