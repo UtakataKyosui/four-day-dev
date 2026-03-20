@@ -9,3 +9,21 @@ node_modules
 CLAUDE.local.md
 CLAUDE.repo.md
 .claude/skills/addf-gui-test.md
+
+#  pnpmのローカルストア
+.pnpm-store/
+
+# moon
+.moon/cache/
+.moon/hashes/
+.moon/schemas/
+.moon/states/
+
+# Rust ビルド成果物
+target/
+
+# serena（ローカルプロジェクト設定）
+.serena/
+
+# Next.js
+.next/
