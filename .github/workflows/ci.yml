@@ -31,6 +31,8 @@ jobs:
           fetch-depth: 0  # moon ci が git 履歴で変更検出するために必要
 
       - uses: moonrepo/setup-moon-action@v1
+        with:
+          cache: true
 
       - uses: pnpm/action-setup@v4
         with:

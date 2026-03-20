@@ -10,6 +10,10 @@ tasks:
 
   build:
     command: pnpm build
+    inputs:
+      - src/**/*.ts
+      - tsconfig.json
+      - package.json
     outputs:
       - dist
 
@@ -22,6 +26,13 @@ tasks:
 
   lint:
     command: pnpm lint
+    inputs:
+      - src/**/*.ts
+      - biome.json
+      - "@root(biome.json)"
 
   typecheck:
     command: pnpm typecheck
+    inputs:
+      - src/**/*.ts
+      - tsconfig.json

@@ -1,46 +1,46 @@
-'use client'
+"use client";
 
-import { useEffect, useState, useCallback } from 'react'
-import { meals as mealsApi } from '@/lib/api-client'
-import type { Meal } from '@/lib/api-client'
-import { MealGrid } from '@/components/meals/MealGrid'
-import { DateNav } from '@/components/shared/DateNav'
+import { MealGrid } from "@/components/meals/MealGrid";
+import { DateNav } from "@/components/shared/DateNav";
+import { meals as mealsApi } from "@/lib/api-client";
+import type { Meal } from "@/lib/api-client";
+import { useCallback, useEffect, useState } from "react";
 
 export default function MealsPage() {
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
-  const [mealList, setMealList] = useState<Meal[]>([])
-  const [loading, setLoading] = useState(true)
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [mealList, setMealList] = useState<Meal[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const fetchMeals = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const data = await mealsApi.list(date)
-      setMealList(data)
+      const data = await mealsApi.list(date);
+      setMealList(data);
     } catch (e) {
-      console.error(e)
+      console.error(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [date])
+  }, [date]);
 
   useEffect(() => {
-    fetchMeals()
-  }, [fetchMeals])
+    fetchMeals();
+  }, [fetchMeals]);
 
   function handleMealUpdated(meal: Meal) {
     setMealList((prev) => {
-      const idx = prev.findIndex((m) => m.pid === meal.pid)
+      const idx = prev.findIndex((m) => m.pid === meal.pid);
       if (idx >= 0) {
-        const next = [...prev]
-        next[idx] = meal
-        return next
+        const next = [...prev];
+        next[idx] = meal;
+        return next;
       }
-      return [...prev, meal]
-    })
+      return [...prev, meal];
+    });
   }
 
   function handleMealDeleted(pid: string) {
-    setMealList((prev) => prev.filter((m) => m.pid !== pid))
+    setMealList((prev) => prev.filter((m) => m.pid !== pid));
   }
 
   return (
@@ -61,5 +61,5 @@ export default function MealsPage() {
         />
       )}
     </div>
-  )
+  );
 }

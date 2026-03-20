@@ -1,28 +1,28 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { login } from '@/lib/auth'
+import { login } from "@/lib/auth";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function LoginForm() {
-  const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      await login(email, password)
-      router.push('/dashboard')
+      await login(email, password);
+      router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'ログインに失敗しました')
+      setError(err instanceof Error ? err.message : "ログインに失敗しました");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -62,14 +62,14 @@ export function LoginForm() {
         disabled={loading}
         className="w-full py-2 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors"
       >
-        {loading ? 'ログイン中...' : 'ログイン'}
+        {loading ? "ログイン中..." : "ログイン"}
       </button>
       <p className="text-center text-sm text-muted-foreground">
-        アカウントをお持ちでない方は{' '}
+        アカウントをお持ちでない方は{" "}
         <Link href="/register" className="text-primary hover:underline">
           新規登録
         </Link>
       </p>
     </form>
-  )
+  );
 }

@@ -1,25 +1,25 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { logout } from '@/lib/auth'
-import { cn } from '@/lib/utils'
+import { logout } from "@/lib/auth";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
 const navItems = [
-  { href: '/dashboard', label: 'ダッシュボード', icon: '🏠' },
-  { href: '/meals', label: '食事記録', icon: '🍽️' },
-  { href: '/sleep', label: '睡眠記録', icon: '😴' },
-  { href: '/analysis', label: '健康分析', icon: '📊' },
-  { href: '/settings', label: '設定', icon: '⚙️' },
-]
+  { href: "/dashboard", label: "ダッシュボード", icon: "🏠" },
+  { href: "/meals", label: "食事記録", icon: "🍽️" },
+  { href: "/sleep", label: "睡眠記録", icon: "😴" },
+  { href: "/analysis", label: "健康分析", icon: "📊" },
+  { href: "/settings", label: "設定", icon: "⚙️" },
+];
 
 export function NavSidebar() {
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
 
   async function handleLogout() {
-    logout()
-    router.push('/login')
+    logout();
+    router.push("/login");
   }
 
   return (
@@ -33,10 +33,10 @@ export function NavSidebar() {
             key={item.href}
             href={item.href}
             className={cn(
-              'flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors mb-1',
-              pathname === item.href || pathname.startsWith(item.href + '/')
-                ? 'bg-primary text-primary-foreground'
-                : 'hover:bg-accent hover:text-accent-foreground'
+              "flex items-center gap-3 px-3 py-2 rounded-md text-sm transition-colors mb-1",
+              pathname === item.href || pathname.startsWith(`${item.href}/`)
+                ? "bg-primary text-primary-foreground"
+                : "hover:bg-accent hover:text-accent-foreground"
             )}
           >
             <span>{item.icon}</span>
@@ -46,6 +46,7 @@ export function NavSidebar() {
       </nav>
       <div className="p-2 border-t border-border">
         <button
+          type="button"
           onClick={handleLogout}
           className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-colors"
         >
@@ -54,5 +55,5 @@ export function NavSidebar() {
         </button>
       </div>
     </aside>
-  )
+  );
 }

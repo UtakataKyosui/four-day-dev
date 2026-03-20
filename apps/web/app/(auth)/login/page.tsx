@@ -1,4 +1,4 @@
-import { LoginForm } from '@/components/auth/LoginForm'
+import { LoginForm } from "@/components/auth/LoginForm";
 
 export default function LoginPage() {
   return (
@@ -9,5 +9,5 @@ export default function LoginPage() {
       </div>
       <LoginForm />
     </div>
-  )
+  );
 }

@@ -1,58 +1,59 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { meals as mealsApi } from '@/lib/api-client'
-import type { Meal } from '@/lib/api-client'
+import { meals as mealsApi } from "@/lib/api-client";
+import type { Meal } from "@/lib/api-client";
+import { useState } from "react";
 
 interface MealNoteFormProps {
-  mealType: 'breakfast' | 'lunch' | 'dinner'
-  date: string
-  existing?: Meal
-  onSaved: (meal: Meal) => void
-  onCancel: () => void
+  mealType: "breakfast" | "lunch" | "dinner";
+  date: string;
+  existing?: Meal;
+  onSaved: (meal: Meal) => void;
+  onCancel: () => void;
 }
 
 export function MealNoteForm({ mealType, date, existing, onSaved, onCancel }: MealNoteFormProps) {
-  const [notes, setNotes] = useState(existing?.notes || '')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [notes, setNotes] = useState(existing?.notes || "");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const mealLabels = { breakfast: '朝食', lunch: '昼食', dinner: '夕食' }
-  const defaultHours = { breakfast: 7, lunch: 12, dinner: 19 }
+  const mealLabels = { breakfast: "朝食", lunch: "昼食", dinner: "夕食" };
+  const defaultHours = { breakfast: 7, lunch: 12, dinner: 19 };
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!notes.trim()) return
-    setLoading(true)
-    setError('')
+    e.preventDefault();
+    if (!notes.trim()) return;
+    setLoading(true);
+    setError("");
     try {
-      const eatenAt = new Date(date)
-      eatenAt.setHours(defaultHours[mealType], 0, 0, 0)
+      const eatenAt = new Date(date);
+      eatenAt.setHours(defaultHours[mealType], 0, 0, 0);
 
-      let savedMeal: Meal
+      let savedMeal: Meal;
       if (existing) {
-        savedMeal = await mealsApi.update(existing.pid, { notes })
+        savedMeal = await mealsApi.update(existing.pid, { notes });
       } else {
         savedMeal = await mealsApi.create({
           meal_type: mealType,
           eaten_at: eatenAt.toISOString(),
           notes,
-        })
+        });
       }
-      onSaved(savedMeal)
+      onSaved(savedMeal);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '保存に失敗しました')
+      setError(err instanceof Error ? err.message : "保存に失敗しました");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <label className="block text-sm font-medium">
+      <label htmlFor="meal-notes" className="block text-sm font-medium">
         {mealLabels[mealType]}の内容
       </label>
       <textarea
+        id="meal-notes"
         value={notes}
         onChange={(e) => setNotes(e.target.value)}
         placeholder="例: ご飯、味噌汁、焼き魚、サラダ"
@@ -73,9 +74,9 @@ export function MealNoteForm({ mealType, date, existing, onSaved, onCancel }: Me
           disabled={loading || !notes.trim()}
           className="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors"
         >
-          {loading ? '保存中...' : '保存'}
+          {loading ? "保存中..." : "保存"}
         </button>
       </div>
     </form>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-import type { Page } from '@playwright/test'
+import type { Page } from "@playwright/test";
 
-export const TEST_TOKEN = 'test-auth-token'
+export const TEST_TOKEN = "test-auth-token";
 
 /**
  * localStorage に auth_token を注入してログイン済み状態にする。
@@ -8,8 +8,8 @@ export const TEST_TOKEN = 'test-auth-token'
  */
 export async function setLoggedIn(page: Page): Promise<void> {
   await page.addInitScript((token) => {
-    localStorage.setItem('auth_token', token)
-  }, TEST_TOKEN)
+    localStorage.setItem("auth_token", token);
+  }, TEST_TOKEN);
 }
 
 /**
@@ -18,6 +18,6 @@ export async function setLoggedIn(page: Page): Promise<void> {
  */
 export async function setLoggedOut(page: Page): Promise<void> {
   await page.addInitScript(() => {
-    localStorage.removeItem('auth_token')
-  })
+    localStorage.removeItem("auth_token");
+  });
 }

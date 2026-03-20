@@ -1,39 +1,39 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { fitbit as fitbitApi } from '@/lib/api-client'
-import type { FitbitStatus } from '@/lib/api-client'
+import { fitbit as fitbitApi } from "@/lib/api-client";
+import type { FitbitStatus } from "@/lib/api-client";
+import { useState } from "react";
 
 interface FitbitConnectButtonProps {
-  status: FitbitStatus
-  onStatusChange: (status: FitbitStatus) => void
+  status: FitbitStatus;
+  onStatusChange: (status: FitbitStatus) => void;
 }
 
 export function FitbitConnectButton({ status, onStatusChange }: FitbitConnectButtonProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   async function handleConnect() {
-    setLoading(true)
+    setLoading(true);
     try {
-      const { url } = await fitbitApi.authUrl()
-      window.location.href = url
+      const { url } = await fitbitApi.authUrl();
+      window.location.href = url;
     } catch (e) {
-      console.error(e)
+      console.error(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   async function handleDisconnect() {
-    if (!confirm('Fitbit連携を解除しますか？')) return
-    setLoading(true)
+    if (!confirm("Fitbit連携を解除しますか？")) return;
+    setLoading(true);
     try {
-      await fitbitApi.disconnect()
-      onStatusChange({ connected: false, last_synced_at: null })
+      await fitbitApi.disconnect();
+      onStatusChange({ connected: false, last_synced_at: null });
     } catch (e) {
-      console.error(e)
+      console.error(e);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -45,10 +45,11 @@ export function FitbitConnectButton({ status, onStatusChange }: FitbitConnectBut
         </span>
         {status.last_synced_at && (
           <span className="text-xs text-muted-foreground">
-            最終同期: {new Date(status.last_synced_at).toLocaleDateString('ja-JP')}
+            最終同期: {new Date(status.last_synced_at).toLocaleDateString("ja-JP")}
           </span>
         )}
         <button
+          type="button"
           onClick={handleDisconnect}
           disabled={loading}
           className="text-xs text-destructive hover:underline disabled:opacity-50"
@@ -56,16 +57,17 @@ export function FitbitConnectButton({ status, onStatusChange }: FitbitConnectBut
           連携解除
         </button>
       </div>
-    )
+    );
   }
 
   return (
     <button
+      type="button"
       onClick={handleConnect}
       disabled={loading}
       className="px-4 py-2 bg-[#00B0B9] text-white rounded-md hover:bg-[#00B0B9]/90 disabled:opacity-50 transition-colors text-sm"
     >
-      {loading ? '接続中...' : 'Fitbitと連携する'}
+      {loading ? "接続中..." : "Fitbitと連携する"}
     </button>
-  )
+  );
 }

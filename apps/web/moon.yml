@@ -5,6 +5,14 @@ language: typescript
 tasks:
   build:
     command: pnpm build
+    inputs:
+      - app/**/*.{ts,tsx}
+      - components/**/*.{ts,tsx}
+      - lib/**/*.ts
+      - next.config.*
+      - postcss.config.*
+      - package.json
+      - tsconfig.json
     outputs:
       - .next
 
@@ -15,12 +23,30 @@ tasks:
 
   lint:
     command: pnpm lint
+    inputs:
+      - app/**/*.{ts,tsx}
+      - components/**/*.{ts,tsx}
+      - lib/**/*.ts
+      - biome.json
+      - "@root(biome.json)"
 
   typecheck:
     command: pnpm typecheck
+    inputs:
+      - app/**/*.{ts,tsx}
+      - components/**/*.{ts,tsx}
+      - lib/**/*.ts
+      - tsconfig.json
+      - next-env.d.ts
 
   format:
     command: pnpm format
+    inputs:
+      - app/**/*.{ts,tsx}
+      - components/**/*.{ts,tsx}
+      - lib/**/*.ts
+      - biome.json
+      - "@root(biome.json)"
     options:
       runInCI: false
 

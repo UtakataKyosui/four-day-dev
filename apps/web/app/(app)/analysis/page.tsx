@@ -1,33 +1,33 @@
-'use client'
+"use client";
 
-import { useEffect, useState, useCallback } from 'react'
-import Link from 'next/link'
-import { analysis as analysisApi } from '@/lib/api-client'
-import type { HealthAnalysis } from '@/lib/api-client'
-import { AnalysisCard } from '@/components/analysis/AnalysisCard'
-import { AnalysisTriggerButton } from '@/components/analysis/AnalysisTriggerButton'
-import { DateNav } from '@/components/shared/DateNav'
+import { AnalysisCard } from "@/components/analysis/AnalysisCard";
+import { AnalysisTriggerButton } from "@/components/analysis/AnalysisTriggerButton";
+import { DateNav } from "@/components/shared/DateNav";
+import { analysis as analysisApi } from "@/lib/api-client";
+import type { HealthAnalysis } from "@/lib/api-client";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
 export default function AnalysisPage() {
-  const [date, setDate] = useState(new Date().toISOString().slice(0, 10))
-  const [currentAnalysis, setCurrentAnalysis] = useState<HealthAnalysis | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [currentAnalysis, setCurrentAnalysis] = useState<HealthAnalysis | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const fetchAnalysis = useCallback(async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const data = await analysisApi.get(date)
-      setCurrentAnalysis(data)
+      const data = await analysisApi.get(date);
+      setCurrentAnalysis(data);
     } catch {
-      setCurrentAnalysis(null)
+      setCurrentAnalysis(null);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [date])
+  }, [date]);
 
   useEffect(() => {
-    fetchAnalysis()
-  }, [fetchAnalysis])
+    fetchAnalysis();
+  }, [fetchAnalysis]);
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -54,5 +54,5 @@ export default function AnalysisPage() {
         </div>
       )}
     </div>
-  )
+  );
 }

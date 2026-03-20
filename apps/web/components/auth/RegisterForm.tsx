@@ -1,31 +1,31 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { auth as authApi } from '@/lib/api-client'
-import { login } from '@/lib/auth'
+import { auth as authApi } from "@/lib/api-client";
+import { login } from "@/lib/auth";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function RegisterForm() {
-  const router = useRouter()
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      await authApi.register(name, email, password)
-      await login(email, password)
-      router.push('/dashboard')
+      await authApi.register(name, email, password);
+      await login(email, password);
+      router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : '登録に失敗しました')
+      setError(err instanceof Error ? err.message : "登録に失敗しました");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -80,14 +80,14 @@ export function RegisterForm() {
         disabled={loading}
         className="w-full py-2 px-4 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors"
       >
-        {loading ? '登録中...' : 'アカウントを作成'}
+        {loading ? "登録中..." : "アカウントを作成"}
       </button>
       <p className="text-center text-sm text-muted-foreground">
-        すでにアカウントをお持ちの方は{' '}
+        すでにアカウントをお持ちの方は{" "}
         <Link href="/login" className="text-primary hover:underline">
           ログイン
         </Link>
       </p>
     </form>
-  )
+  );
 }

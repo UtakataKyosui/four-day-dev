@@ -1,22 +1,26 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { analysis as analysisApi } from '@/lib/api-client'
-import type { HealthAnalysis } from '@/lib/api-client'
+import { analysis as analysisApi } from "@/lib/api-client";
+import type { HealthAnalysis } from "@/lib/api-client";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function AnalysisHistoryPage() {
-  const [history, setHistory] = useState<HealthAnalysis[]>([])
-  const [loading, setLoading] = useState(true)
+  const [history, setHistory] = useState<HealthAnalysis[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    analysisApi.history().then(setHistory).catch(console.error).finally(() => setLoading(false))
-  }, [])
+    analysisApi
+      .history()
+      .then(setHistory)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
 
   function scoreColor(score: number): string {
-    if (score >= 80) return 'text-green-500'
-    if (score >= 60) return 'text-yellow-500'
-    return 'text-destructive'
+    if (score >= 80) return "text-green-500";
+    if (score >= 60) return "text-yellow-500";
+    return "text-destructive";
   }
 
   return (
@@ -43,12 +47,14 @@ export default function AnalysisHistoryPage() {
             >
               <div>
                 <p className="font-medium">{item.analysis_date}</p>
-                {item.status === 'completed' && item.summary && (
-                  <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">{item.summary.slice(0, 60)}...</p>
+                {item.status === "completed" && item.summary && (
+                  <p className="text-sm text-muted-foreground line-clamp-1 mt-0.5">
+                    {item.summary.slice(0, 60)}...
+                  </p>
                 )}
               </div>
               <div className="text-right">
-                {item.status === 'completed' && item.overall_score !== null ? (
+                {item.status === "completed" && item.overall_score !== null ? (
                   <span className={`text-2xl font-bold ${scoreColor(item.overall_score)}`}>
                     {item.overall_score}
                   </span>
@@ -61,5 +67,5 @@ export default function AnalysisHistoryPage() {
         </div>
       )}
     </div>
-  )
+  );
 }
