@@ -43,10 +43,9 @@ async fn trigger(
         .map_err(|_| Error::BadRequest("invalid date format".to_string()))?;
 
     // Rate limit: max 3 analyses per user per day
-    let count = crate::models::health_analyses::Model::count_today_for_user(
-        &ctx.db, user.id, &date,
-    )
-    .await?;
+    let count =
+        crate::models::health_analyses::Model::count_today_for_user(&ctx.db, user.id, &date)
+            .await?;
 
     if count >= 3 {
         return Err(Error::BadRequest(
@@ -57,7 +56,7 @@ async fn trigger(
     let analysis =
         crate::models::health_analyses::Model::create_pending(&ctx.db, user.id, &date).await?;
 
-    use crate::workers::health_analysis::{HealthAnalysisWorker, HealthAnalysisArgs};
+    use crate::workers::health_analysis::{HealthAnalysisArgs, HealthAnalysisWorker};
     HealthAnalysisWorker::perform_later(
         &ctx,
         HealthAnalysisArgs {
@@ -140,10 +139,9 @@ async fn get_history(
         to
     };
 
-    let analyses = crate::models::health_analyses::Model::find_history(
-        &ctx.db, user.id, &from_date, &to_date,
-    )
-    .await?;
+    let analyses =
+        crate::models::health_analyses::Model::find_history(&ctx.db, user.id, &from_date, &to_date)
+            .await?;
 
     format::json(analyses)
 }

@@ -1,9 +1,7 @@
 pub use crate::models::_entities::sleep_records::{self, ActiveModel, Column, Entity, Model};
 use chrono::{DateTime, Utc};
 use loco_rs::prelude::*;
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, QueryOrder, Set,
-};
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, QueryOrder, Set};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
@@ -57,10 +55,7 @@ impl Model {
         Ok(records)
     }
 
-    pub async fn find_by_pid(
-        db: &DatabaseConnection,
-        pid: &Uuid,
-    ) -> ModelResult<Self> {
+    pub async fn find_by_pid(db: &DatabaseConnection, pid: &Uuid) -> ModelResult<Self> {
         let record = Entity::find()
             .filter(Column::Pid.eq(*pid))
             .one(db)
@@ -88,7 +83,10 @@ impl Model {
             stages_rem_minutes: Set(params.stages_rem_minutes),
             stages_wake_minutes: Set(params.stages_wake_minutes),
             is_main_sleep: Set(params.is_main_sleep.unwrap_or(true)),
-            source: Set(params.source.clone().unwrap_or_else(|| "manual".to_string())),
+            source: Set(params
+                .source
+                .clone()
+                .unwrap_or_else(|| "manual".to_string())),
             ..Default::default()
         };
         let record = record.insert(db).await?;

@@ -83,13 +83,9 @@ impl BackgroundWorker<FitbitSyncArgs> for FitbitSyncWorker {
                 let end_str = log["endTime"].as_str().unwrap_or("");
 
                 let sleep_start = chrono::DateTime::parse_from_rfc3339(start_str)
-                    .unwrap_or_else(|_| {
-                        chrono::Utc::now().with_timezone(&tz)
-                    });
+                    .unwrap_or_else(|_| chrono::Utc::now().with_timezone(&tz));
                 let sleep_end = chrono::DateTime::parse_from_rfc3339(end_str)
-                    .unwrap_or_else(|_| {
-                        chrono::Utc::now().with_timezone(&tz)
-                    });
+                    .unwrap_or_else(|_| chrono::Utc::now().with_timezone(&tz));
 
                 let duration_ms = log["duration"].as_i64().unwrap_or(0);
                 let duration_minutes = (duration_ms / 60000) as i32;

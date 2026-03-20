@@ -30,8 +30,7 @@ fn get_fitbit_redirect_uri() -> String {
 }
 
 fn get_frontend_url() -> String {
-    std::env::var("FRONTEND_URL")
-        .unwrap_or_else(|_| "http://localhost:3000".to_string())
+    std::env::var("FRONTEND_URL").unwrap_or_else(|_| "http://localhost:3000".to_string())
 }
 
 fn get_token_key() -> anyhow::Result<[u8; 32]> {
@@ -105,9 +104,7 @@ async fn callback(
     let refresh_token = token_data["refresh_token"]
         .as_str()
         .ok_or_else(|| Error::BadRequest("no refresh_token".to_string()))?;
-    let fitbit_user_id = token_data["user_id"]
-        .as_str()
-        .unwrap_or("unknown");
+    let fitbit_user_id = token_data["user_id"].as_str().unwrap_or("unknown");
     let expires_in = token_data["expires_in"].as_i64().unwrap_or(28800);
 
     let token_expires_at = chrono::Utc::now() + chrono::Duration::seconds(expires_in);
@@ -134,10 +131,7 @@ async fn callback(
 }
 
 #[debug_handler]
-async fn status(
-    auth: auth::JWT,
-    State(ctx): State<AppContext>,
-) -> Result<Response> {
+async fn status(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
     let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
     let conn = crate::models::fitbit_connections::Model::find_by_user_id(&ctx.db, user.id).await?;
 
@@ -157,10 +151,7 @@ async fn status(
 }
 
 #[debug_handler]
-async fn disconnect(
-    auth: auth::JWT,
-    State(ctx): State<AppContext>,
-) -> Result<Response> {
+async fn disconnect(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
     let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
     crate::models::fitbit_connections::Model::delete_by_user_id(&ctx.db, user.id).await?;
     format::json(())
@@ -183,9 +174,11 @@ async fn sync(
         .await?
         .ok_or_else(|| Error::BadRequest("Fitbit not connected".to_string()))?;
 
-    let date = params.date.unwrap_or_else(|| chrono::Utc::now().format("%Y-%m-%d").to_string());
+    let date = params
+        .date
+        .unwrap_or_else(|| chrono::Utc::now().format("%Y-%m-%d").to_string());
 
-    use crate::workers::fitbit_sync::{FitbitSyncWorker, FitbitSyncArgs};
+    use crate::workers::fitbit_sync::{FitbitSyncArgs, FitbitSyncWorker};
     FitbitSyncWorker::perform_later(
         &ctx,
         FitbitSyncArgs {

@@ -1,9 +1,7 @@
 pub use crate::models::_entities::health_analyses::{self, ActiveModel, Column, Entity, Model};
 use chrono::NaiveDate;
 use loco_rs::prelude::*;
-use sea_orm::{
-    ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, QueryOrder, Set,
-};
+use sea_orm::{ActiveModelTrait, ColumnTrait, EntityTrait, QueryFilter, QueryOrder, Set};
 use serde_json::Value;
 use uuid::Uuid;
 
@@ -88,6 +86,7 @@ impl Model {
         Ok(analysis)
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub async fn complete(
         self,
         db: &DatabaseConnection,

@@ -1,7 +1,4 @@
-use crate::models::{
-    _entities::users,
-    sleep_records::CreateSleepParams,
-};
+use crate::models::{_entities::users, sleep_records::CreateSleepParams};
 use axum::extract::{Path, Query};
 use loco_rs::prelude::*;
 use serde::Deserialize;

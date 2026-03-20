@@ -20,6 +20,7 @@ impl Model {
         Ok(conn)
     }
 
+    #[allow(clippy::too_many_arguments)]
     pub async fn upsert(
         db: &DatabaseConnection,
         user_id: i32,
@@ -65,10 +66,7 @@ impl Model {
         Ok(conn)
     }
 
-    pub async fn delete_by_user_id(
-        db: &DatabaseConnection,
-        user_id: i32,
-    ) -> ModelResult<()> {
+    pub async fn delete_by_user_id(db: &DatabaseConnection, user_id: i32) -> ModelResult<()> {
         Entity::delete_many()
             .filter(Column::UserId.eq(user_id))
             .exec(db)
@@ -76,10 +74,7 @@ impl Model {
         Ok(())
     }
 
-    pub async fn update_last_synced(
-        self,
-        db: &DatabaseConnection,
-    ) -> ModelResult<Self> {
+    pub async fn update_last_synced(self, db: &DatabaseConnection) -> ModelResult<Self> {
         let tz = chrono::FixedOffset::east_opt(0).unwrap();
         let mut active: ActiveModel = self.into();
         active.last_synced_at = Set(Some(Utc::now().with_timezone(&tz)));
@@ -88,13 +83,11 @@ impl Model {
     }
 
     pub fn decrypt_access_token(&self, key: &[u8; 32]) -> Result<String> {
-        Self::decrypt_token(&self.access_token_enc, key)
-            .map_err(|e| loco_rs::Error::Any(e.into()))
+        Self::decrypt_token(&self.access_token_enc, key).map_err(|e| loco_rs::Error::Any(e.into()))
     }
 
     pub fn decrypt_refresh_token(&self, key: &[u8; 32]) -> Result<String> {
-        Self::decrypt_token(&self.refresh_token_enc, key)
-            .map_err(|e| loco_rs::Error::Any(e.into()))
+        Self::decrypt_token(&self.refresh_token_enc, key).map_err(|e| loco_rs::Error::Any(e.into()))
     }
 
     fn encrypt_token(token: &str, key: &[u8; 32]) -> anyhow::Result<String> {

@@ -44,12 +44,9 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
             .map_err(|_| Error::BadRequest("invalid date".to_string()))?;
 
         // Fetch meals for the date
-        let meals = crate::models::meals::Model::find_by_user_and_date(
-            &self.ctx.db,
-            args.user_id,
-            &date,
-        )
-        .await?;
+        let meals =
+            crate::models::meals::Model::find_by_user_and_date(&self.ctx.db, args.user_id, &date)
+                .await?;
 
         // Fetch sleep for the date
         let sleep_records = crate::models::sleep_records::Model::find_by_user_and_date(
@@ -115,8 +112,7 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
 
                 let usage = agent_result.usage.unwrap_or_default();
                 let prompt_tokens = usage["prompt_tokens"].as_i64().unwrap_or(0) as i32;
-                let completion_tokens =
-                    usage["completion_tokens"].as_i64().unwrap_or(0) as i32;
+                let completion_tokens = usage["completion_tokens"].as_i64().unwrap_or(0) as i32;
 
                 analysis
                     .complete(
@@ -143,9 +139,7 @@ impl BackgroundWorker<HealthAnalysisArgs> for HealthAnalysisWorker {
             }
             Err(e) => {
                 tracing::error!("Agent service request error: {}", e);
-                analysis
-                    .mark_failed(&self.ctx.db, &e.to_string())
-                    .await?;
+                analysis.mark_failed(&self.ctx.db, &e.to_string()).await?;
             }
         }
 

@@ -1,8 +1,6 @@
-use crate::{
-    models::{
-        _entities::users,
-        meals::{CreateMealParams, UpdateMealParams},
-    },
+use crate::models::{
+    _entities::users,
+    meals::{CreateMealParams, UpdateMealParams},
 };
 use axum::extract::{Path, Query};
 use loco_rs::prelude::*;
@@ -29,8 +27,7 @@ async fn list(
         chrono::Utc::now().date_naive()
     };
 
-    let meals =
-        crate::models::meals::Model::find_by_user_and_date(&ctx.db, user.id, &date).await?;
+    let meals = crate::models::meals::Model::find_by_user_and_date(&ctx.db, user.id, &date).await?;
 
     format::json(meals)
 }
@@ -43,7 +40,10 @@ async fn create(
 ) -> Result<Response> {
     let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
 
-    if params.meal_type != "breakfast" && params.meal_type != "lunch" && params.meal_type != "dinner" {
+    if params.meal_type != "breakfast"
+        && params.meal_type != "lunch"
+        && params.meal_type != "dinner"
+    {
         return Err(Error::BadRequest(
             "meal_type must be breakfast, lunch, or dinner".to_string(),
         ));

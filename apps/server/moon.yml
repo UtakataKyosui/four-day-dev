@@ -20,8 +20,10 @@ tasks:
 
   format:
     command: cargo fmt --check
-    options:
-      runInCI: false
+    inputs:
+      - src/**/*.rs
+      - migration/src/**/*.rs
+      - rustfmt.toml
 
   test:
     command: cargo test
