@@ -1,0 +1,34 @@
+{
+  "name": "sandbox-isolated",
+  "dockerComposeFile": "docker-compose.yaml",
+  "service": "app",
+  "shutdownAction": "stopCompose",
+  "overrideCommand": false,
+  "workspaceFolder": "/workspaces/sandbox",
+  "mounts": [
+    "source=claude-sandbox-auth,target=/home/utakata/.claude,type=volume",
+    "source=sandbox-gh-auth,target=/home/utakata/.config/gh,type=volume",
+    "source=sandbox-gemini-auth,target=/home/utakata/.gemini,type=volume",
+    "source=sandbox-codex-auth,target=/home/utakata/.codex,type=volume"
+  ],
+  "updateRemoteUserUID": true,
+  "remoteEnv": {
+    "JJ_USER": "${localEnv:JJ_USER}",
+    "JJ_EMAIL": "${localEnv:JJ_EMAIL}"
+  },
+  "postCreateCommand": "bash .devcontainer/postCreate.sh",
+  "remoteUser": "utakata",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.mouseWheelScrollSensitivity": 1
+      },
+      "extensions": [
+        "MermaidChart.vscode-mermaid-chart",
+        "visualjj.visualjj",
+        "Zerotaskx.rust-extension-pack"
+      ]
+    }
+  }
+}

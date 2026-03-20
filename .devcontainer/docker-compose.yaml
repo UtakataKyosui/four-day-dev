@@ -1,0 +1,38 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ..:/workspaces/sandbox:cached
+    command: sleep infinity
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    tmpfs:
+      - /tmp
+    environment:
+      DATABASE_URL: postgres://loco:loco@db:5432/sandbox_development
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: loco
+      POSTGRES_PASSWORD: loco
+      POSTGRES_DB: sandbox_development
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    tmpfs:
+      - /tmp
+
+volumes:
+  postgres_data:
+  claude-sandbox-auth:
+  sandbox-gh-auth:
+  sandbox-gemini-auth:
+  sandbox-codex-auth:
