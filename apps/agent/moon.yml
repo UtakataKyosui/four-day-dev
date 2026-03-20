@@ -1,0 +1,26 @@
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+type: application
+language: typescript
+
+tasks:
+  dev:
+    command: pnpm dev
+    local: true
+
+  build:
+    command: pnpm build
+    outputs:
+      - dist
+
+  start:
+    command: pnpm start
+    deps:
+      - build
+    local: true
+
+  lint:
+    command: pnpm lint
+
+  typecheck:
+    command: pnpm typecheck

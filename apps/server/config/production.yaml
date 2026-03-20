@@ -1,0 +1,49 @@
+logger:
+  enable: true
+  pretty_backtrace: false
+  level: info
+  format: json
+
+server:
+  port: {{ get_env(name="PORT", default="5150") }}
+  binding: "0.0.0.0"
+  host: {{ get_env(name="FRONTEND_URL", default="https://your-app.pages.dev") }}
+  middlewares:
+    cors:
+      enable: true
+      allow_origins:
+        - {{ get_env(name="FRONTEND_URL", default="https://your-app.pages.dev") }}
+      allow_headers:
+        - content-type
+        - authorization
+      allow_methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - OPTIONS
+      max_age: 3600
+
+workers:
+  mode: BackgroundAsync
+
+mailer:
+  smtp:
+    enable: false
+
+database:
+  uri: {{ get_env(name="DATABASE_URL", default="postgres://loco:loco@localhost:5432/server_production") }}
+  enable_logging: false
+  connect_timeout: 5000
+  idle_timeout: 5000
+  min_connections: {{ get_env(name="DB_MIN_CONNECTIONS", default="1") }}
+  max_connections: {{ get_env(name="DB_MAX_CONNECTIONS", default="5") }}
+  auto_migrate: true
+  dangerously_truncate: false
+  dangerously_recreate: false
+
+auth:
+  jwt:
+    secret: {{ get_env(name="APP_JWT_SECRET", default="changeme-in-production") }}
+    expiration: 604800
