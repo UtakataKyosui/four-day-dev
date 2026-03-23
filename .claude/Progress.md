@@ -46,4 +46,8 @@
 
 ## タスク
 
-（現在タスクなし）
+- [x] PyO3 で Python health agent を呼び出す service を追加する
+- [x] `HealthAnalysisWorker` の HTTP agent 呼び出しを置き換える
+- [x] Python Claude Agent SDK 実装を `packages/agent` へ配置する
+- [x] Plan / TODO / README を更新する
+- [ ] `apps/server` の build / test を確認する

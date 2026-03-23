@@ -1,0 +1,63 @@
+use anyhow::{Context, Result};
+use pyo3::{prelude::*, types::PyList};
+use serde::{Deserialize, Serialize};
+
+fn get_python_agent_dir() -> String {
+    std::env::var("PYTHON_AGENT_DIR")
+        .unwrap_or_else(|_| concat!(env!("CARGO_MANIFEST_DIR"), "/../packages/agent").to_string())
+}
+
+#[derive(Debug, Serialize)]
+pub struct HealthAgentRequest {
+    pub date: String,
+    pub meals: Vec<serde_json::Value>,
+    pub sleep: Option<serde_json::Value>,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct HealthAgentResponse {
+    pub meal_score: i32,
+    pub sleep_score: i32,
+    pub overall_score: i32,
+    pub summary: String,
+    pub recommendations: serde_json::Value,
+    pub usage: Option<serde_json::Value>,
+}
+
+pub async fn analyze_health(request: HealthAgentRequest) -> Result<HealthAgentResponse> {
+    tokio::task::spawn_blocking(move || analyze_health_blocking(request))
+        .await
+        .context("python agent task join failed")?
+}
+
+fn analyze_health_blocking(request: HealthAgentRequest) -> Result<HealthAgentResponse> {
+    Python::with_gil(|py| {
+        let sys = py.import_bound("sys").context("failed to import sys")?;
+        let path = sys
+            .getattr("path")
+            .context("failed to access sys.path")?
+            .downcast_into::<PyList>()
+            .map_err(|_| anyhow::anyhow!("failed to downcast sys.path"))?;
+
+        let agent_dir = get_python_agent_dir();
+        let already_in_path = path.iter().any(|p| p.to_string() == agent_dir);
+        if !already_in_path {
+            path.insert(0, agent_dir.as_str())
+                .context("failed to extend sys.path")?;
+        }
+
+        let module = py
+            .import_bound("health_agent")
+            .context("failed to import python health_agent module")?;
+        let payload = serde_json::to_string(&request).context("failed to serialize request")?;
+        let raw_response: String = module
+            .getattr("run_health_analysis")
+            .context("missing run_health_analysis function")?
+            .call1((payload,))
+            .context("python agent execution failed")?
+            .extract()
+            .context("failed to extract python agent response")?;
+
+        serde_json::from_str(&raw_response).context("failed to parse python agent response")
+    })
+}

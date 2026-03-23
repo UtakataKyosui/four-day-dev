@@ -46,9 +46,11 @@ jobs:
         with:
           node-version: 24
           cache: pnpm
-          cache-dependency-path: |
-            apps/web/pnpm-lock.yaml
-            apps/agent/pnpm-lock.yaml
+          cache-dependency-path: apps/web/pnpm-lock.yaml
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -62,9 +64,13 @@ jobs:
         run: pnpm install
         working-directory: apps/web
 
-      - name: Install agent dependencies
-        run: pnpm install
-        working-directory: apps/agent
+      - name: Install Python development libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3.12-dev
+
+      - name: Install agent Python dependencies
+        run: pip install -r packages/agent/requirements.txt
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps chromium

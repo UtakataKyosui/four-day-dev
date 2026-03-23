@@ -162,6 +162,7 @@ export const analysis = {
     const params = new URLSearchParams();
     if (from) params.set("from", from);
     if (to) params.set("to", to);
-    return request<HealthAnalysis[]>(`/api/analysis/history?${params}`);
+    const paramStr = params.toString();
+    return request<HealthAnalysis[]>(`/api/analysis/history${paramStr ? `?${paramStr}` : ""}`);
   },
 };

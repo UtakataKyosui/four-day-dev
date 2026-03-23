@@ -3,7 +3,7 @@
 `docs/plans/` の完了状態・優先度をトラックする。
 `docs/plans/` と TODO が一致しなければ TODO を編集する。
 
-## 現在のフェーズ: （次に着手）
+## 現在のフェーズ: 完了済み
 
 ## バックログ
 
@@ -20,3 +20,4 @@
 
 | Phase | 計画ファイル | 状態 |
 |---|---|---|
+| 3 | `docs/plans/0003-pyo3-python-agent-integration.md` | 完了 |
