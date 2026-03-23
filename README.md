@@ -94,7 +94,7 @@ Leapcell 設定の概要:
 |---|---|
 | ルートディレクトリ | `./apps/server` |
 | ランタイム | `Rust (rust debian)` |
-| ビルドコマンド | `bash build.sh` ← デフォルトから変更 |
+| ビルドコマンド | `bash apps/server/build.sh` ← デフォルトから変更 |
 | 起動コマンド | `cargo run --release --bin server-cli` |
 | 環境ポート | `5150` |
 

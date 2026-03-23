@@ -56,7 +56,7 @@ postgres://ユーザー名:パスワード@ホスト:5432/DB名
 | ブランチ | `main` |
 | ルートディレクトリ | `./apps/server` |
 | ランタイム | `Rust` → `rust debian` |
-| ビルドコマンド | `bash build.sh` ← **デフォルト値から変更する** |
+| ビルドコマンド | `bash apps/server/build.sh` ← **デフォルト値から変更する** |
 | 起動コマンド | `cargo run --release --bin server-cli` |
 | 環境ポート | `5150` |
 

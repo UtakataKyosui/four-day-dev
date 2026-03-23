@@ -1,22 +1,24 @@
 #!/usr/bin/env bash
 # Leapcell デプロイ用ビルドスクリプト
-# ワーキングディレクトリ: apps/server
+# 呼び出し例: bash apps/server/build.sh（リポジトリルートから実行）
 set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # ── Web フロントエンドのビルド ──────────────────────────────────
 echo "[build] Building Next.js frontend..."
-cd ../web
+cd "${SCRIPT_DIR}/../web"
 pnpm install --frozen-lockfile
 pnpm build
-# pnpm build は next build 後に out/ を ../server/frontend/dist へ自動コピーする
+# pnpm build は next build 後に out/ を apps/server/frontend/dist へ自動コピーする
 
 # ── Python エージェント依存のインストール ────────────────────────
 echo "[build] Installing Python agent dependencies..."
-cd ../server
-pip install -r ../../packages/agent/requirements.txt
+pip install -r "${SCRIPT_DIR}/../../packages/agent/requirements.txt"
 
 # ── Rust サーバーのビルド ────────────────────────────────────────
 echo "[build] Building Rust server..."
+cd "${SCRIPT_DIR}"
 cargo build --release --locked
 
 echo "[build] Done."
