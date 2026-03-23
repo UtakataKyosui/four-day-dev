@@ -2,7 +2,10 @@ use anyhow::{Context, Result};
 use pyo3::{prelude::*, types::PyList};
 use serde::{Deserialize, Serialize};
 
-const PYTHON_AGENT_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../packages/agent");
+fn get_python_agent_dir() -> String {
+    std::env::var("PYTHON_AGENT_DIR")
+        .unwrap_or_else(|_| concat!(env!("CARGO_MANIFEST_DIR"), "/../packages/agent").to_string())
+}
 
 #[derive(Debug, Serialize)]
 pub struct HealthAgentRequest {
@@ -36,8 +39,12 @@ fn analyze_health_blocking(request: HealthAgentRequest) -> Result<HealthAgentRes
             .downcast_into::<PyList>()
             .map_err(|_| anyhow::anyhow!("failed to downcast sys.path"))?;
 
-        path.insert(0, PYTHON_AGENT_DIR)
-            .context("failed to extend sys.path")?;
+        let agent_dir = get_python_agent_dir();
+        let already_in_path = path.iter().any(|p| p.to_string() == agent_dir);
+        if !already_in_path {
+            path.insert(0, agent_dir.as_str())
+                .context("failed to extend sys.path")?;
+        }
 
         let module = py
             .import_bound("health_agent")

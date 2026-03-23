@@ -42,7 +42,7 @@ def build_prompt(req: dict[str, Any]) -> str:
     meal_section = "\n".join(meal_lines)
     return (
         "あなたは健康アドバイザーです。以下の1日のデータを分析して、JSON形式で回答してください。\n\n"
-        f"DATE: {req['date']}\n\n"
+        f"DATE: {req.get('date', '(日付不明)')}\n\n"
         "【食事】\n"
         f"{meal_section}\n\n"
         "【睡眠】\n"
@@ -72,7 +72,10 @@ def parse_response(text: str) -> dict[str, Any]:
         brace_match = re.search(r"(\{[\s\S]*\})", text)
         json_str = brace_match.group(1) if brace_match else text.strip()
 
-    parsed = json.loads(json_str)
+    try:
+        parsed = json.loads(json_str)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"LLM response JSON parse failed: {e}\nraw: {json_str[:200]}") from e
 
     def clamp(value: Any, default: int) -> int:
         number = value if isinstance(value, (int, float)) else default
