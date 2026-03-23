@@ -90,12 +90,13 @@ pnpm test:e2e     # Playwright E2E テスト
 
 Leapcell 設定の概要:
 
-| 設定項目 | 値 |
+| UI フィールド | 設定値 |
 |---|---|
-| Runtime | Rust |
-| Root Directory | `apps/server` |
-| Build Command | `bash build.sh` |
-| Start Command | `cargo run --release --bin server-cli` |
+| ルートディレクトリ | `./apps/server` |
+| ランタイム | `Rust (rust debian)` |
+| ビルドコマンド | `bash build.sh` ← デフォルトから変更 |
+| 起動コマンド | `cargo run --release --bin server-cli` |
+| 環境ポート | `5150` |
 
 `build.sh` が Web ビルド・Python 依存インストール・Rust ビルドを一括で実行します。
 

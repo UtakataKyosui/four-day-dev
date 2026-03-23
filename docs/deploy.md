@@ -50,13 +50,18 @@ postgres://ユーザー名:パスワード@ホスト:5432/DB名
 2. GitHub リポジトリを連携（このリポジトリを選択）
 3. ビルド設定を以下の通り入力:
 
-| 設定項目 | 値 |
+| UI フィールド | 設定値 |
 |---|---|
-| Runtime | Rust |
-| Root Directory | `apps/server` |
-| Build Command | `bash build.sh` |
-| Start Command | `cargo run --release --bin server-cli` |
-| Port | `PORT` 環境変数を参照（アプリは `0.0.0.0` でバインド済み） |
+| フレームワークプリセット | `Rust` |
+| ブランチ | `main` |
+| ルートディレクトリ | `./apps/server` |
+| ランタイム | `Rust` → `rust debian` |
+| ビルドコマンド | `bash build.sh` ← **デフォルト値から変更する** |
+| 起動コマンド | `cargo run --release --bin server-cli` |
+| 環境ポート | `5150` |
+
+> **注意:** ビルドコマンドのデフォルト値は `cargo build --release --locked` です。
+> Web ビルドと Python 依存のインストールを含む `bash build.sh` に必ず書き換えてください。
 
 ### 3. 環境変数を設定する
 
