@@ -54,14 +54,14 @@ postgres://ユーザー名:パスワード@ホスト:5432/DB名
 |---|---|
 | フレームワークプリセット | `Rust` |
 | ブランチ | `main` |
-| ルートディレクトリ | `./apps/server` |
+| ルートディレクトリ | `.`（リポジトリルート） |
 | ランタイム | `Rust` → `rust debian` |
 | ビルドコマンド | `bash apps/server/build.sh` ← **デフォルト値から変更する** |
-| 起動コマンド | `cargo run --release --bin server-cli` |
+| 起動コマンド | `cd apps/server && cargo run --release --bin server-cli` ← **デフォルト値から変更する** |
 | 環境ポート | `5150` |
 
-> **注意:** ビルドコマンドのデフォルト値は `cargo build --release --locked` です。
-> Web ビルドと Python 依存のインストールを含む `bash build.sh` に必ず書き換えてください。
+> **注意:** このリポジトリはモノレポ構成です。ルートディレクトリは `.`（リポジトリルート）のまま運用し、
+> ビルド・起動コマンドで `apps/server` へ移動します。
 
 ### 3. 環境変数を設定する
 

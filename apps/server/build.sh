@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Leapcell デプロイ用ビルドスクリプト
-# 呼び出し例: bash apps/server/build.sh（リポジトリルートから実行）
+# Leapcell ルートディレクトリ: .（リポジトリルート）
+# 呼び出し例: bash apps/server/build.sh
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

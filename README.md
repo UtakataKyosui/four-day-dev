@@ -92,10 +92,10 @@ Leapcell 設定の概要:
 
 | UI フィールド | 設定値 |
 |---|---|
-| ルートディレクトリ | `./apps/server` |
+| ルートディレクトリ | `.`（リポジトリルート） |
 | ランタイム | `Rust (rust debian)` |
 | ビルドコマンド | `bash apps/server/build.sh` ← デフォルトから変更 |
-| 起動コマンド | `cargo run --release --bin server-cli` |
+| 起動コマンド | `cd apps/server && cargo run --release --bin server-cli` ← デフォルトから変更 |
 | 環境ポート | `5150` |
 
 `build.sh` が Web ビルド・Python 依存インストール・Rust ビルドを一括で実行します。
