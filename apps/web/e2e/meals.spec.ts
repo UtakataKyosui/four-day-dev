@@ -13,9 +13,9 @@ test.describe("食事記録", () => {
     await mockMeals(page, []);
     await page.goto("/meals");
 
-    await expect(page.getByText("朝食")).toBeVisible();
-    await expect(page.getByText("昼食")).toBeVisible();
-    await expect(page.getByText("夕食")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "朝食" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "昼食" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "夕食" })).toBeVisible();
   });
 
   test("食事メモを入力して保存できる", async ({ page }) => {

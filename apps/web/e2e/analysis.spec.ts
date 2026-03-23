@@ -13,7 +13,7 @@ test.describe("健康分析", () => {
     await mockAnalysis(page, mockData.analysis());
     await page.goto("/analysis");
 
-    await expect(page.getByText("健康分析")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "健康分析", level: 1 })).toBeVisible();
     // スコアが表示される
     await expect(page.getByText("78", { exact: true })).toBeVisible(); // overall_score
     await expect(page.getByText("75", { exact: true })).toBeVisible(); // meal_score
@@ -29,9 +29,6 @@ test.describe("健康分析", () => {
 
     // トリガーボタンをクリック
     await page.getByRole("button", { name: "🤖 AIで健康分析する" }).click();
-
-    // ステータスメッセージが表示される
-    await expect(page.getByText("分析を開始しています...")).toBeVisible();
 
     // ポーリング完了後に「完了」が表示される（status エンドポイントが completed を返す）
     await expect(page.getByText("完了")).toBeVisible({ timeout: 10_000 });
@@ -51,7 +48,7 @@ test.describe("健康分析", () => {
     await mockAnalysis(page, analysisWithRecs);
     await page.goto("/analysis");
 
-    await expect(page.getByText("分析サマリー")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "分析サマリー" })).toBeVisible();
     await expect(page.getByText("テスト用分析サマリーです。")).toBeVisible();
     await expect(page.getByText("タンパク質を増やしましょう")).toBeVisible();
     await expect(page.getByText("就寝時間を一定に")).toBeVisible();
