@@ -6,6 +6,12 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# ── Node.js + pnpm のセットアップ ────────────────────────────────
+echo "[build] Installing Node.js and pnpm..."
+curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+apt-get install -y nodejs
+npm install -g pnpm@10
+
 # ── Web フロントエンドのビルド ──────────────────────────────────
 echo "[build] Building Next.js frontend..."
 cd "${SCRIPT_DIR}/../web"
