@@ -153,37 +153,13 @@ export async function mockSleep(
 }
 
 // ---- 分析モック ----
-// 注意: 特定ルートを汎用ルートより先に登録する
+// 注意: Playwright は LIFO でルートをマッチするため、汎用ルートを先に、特定ルートを後に登録する
 
 export async function mockAnalysis(
   page: Page,
   analysis: unknown | null = null,
   history: unknown[] = []
 ): Promise<void> {
-  await page.route(`${API_BASE}/api/analysis/trigger`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ job_id: "test-job-id", status: "pending" }),
-    });
-  });
-
-  await page.route(`${API_BASE}/api/analysis/status/**`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify({ status: "completed", analysis_pid: "analysis-pid-1" }),
-    });
-  });
-
-  await page.route(`${API_BASE}/api/analysis/history**`, async (route) => {
-    await route.fulfill({
-      status: 200,
-      contentType: "application/json",
-      body: JSON.stringify(history),
-    });
-  });
-
   await page.route(`${API_BASE}/api/analysis**`, async (route) => {
     if (analysis === null) {
       await route.fulfill({
@@ -198,6 +174,30 @@ export async function mockAnalysis(
         body: JSON.stringify(analysis),
       });
     }
+  });
+
+  await page.route(`${API_BASE}/api/analysis/history**`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify(history),
+    });
+  });
+
+  await page.route(`${API_BASE}/api/analysis/status/**`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ status: "completed", analysis_pid: "analysis-pid-1" }),
+    });
+  });
+
+  await page.route(`${API_BASE}/api/analysis/trigger`, async (route) => {
+    await route.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: JSON.stringify({ job_id: "test-job-id", status: "pending" }),
+    });
   });
 }
 
