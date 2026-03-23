@@ -148,10 +148,32 @@ cargo test
 
 ## 環境変数
 
+### 開発環境
+
 | 変数 | 説明 | デフォルト |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | バックエンド API URL | `http://localhost:5150` |
+| `NEXT_PUBLIC_API_URL` | フロントエンドが参照する API URL | `http://localhost:5150` |
 | `DATABASE_URL` | PostgreSQL 接続文字列 | `postgres://loco:loco@db:5432/sandbox_development` |
+
+### 本番環境（必須）
+
+| 変数 | 説明 |
+|---|---|
+| `DATABASE_URL` | PostgreSQL 接続文字列（`postgres://user:pass@host:5432/dbname`） |
+| `APP_JWT_SECRET` | JWT 署名キー（十分長いランダム文字列） |
+| `ANTHROPIC_API_KEY` | Claude API キー（健康分析機能に必要） |
+
+### 本番環境（任意）
+
+| 変数 | 説明 | デフォルト |
+|---|---|---|
+| `PORT` | サーバーバインドポート | `5150` |
+| `FRONTEND_URL` | CORS 許可 origin | `http://localhost:5150` |
+| `ANTHROPIC_MODEL` | 使用する Claude モデル | `claude-haiku-4-5-20251001` |
+| `DB_MIN_CONNECTIONS` | DB 最小接続数 | `1` |
+| `DB_MAX_CONNECTIONS` | DB 最大接続数 | `5` |
+
+詳細は [docs/deploy.md](./docs/deploy.md) を参照してください。
 
 ## API エンドポイント
 
