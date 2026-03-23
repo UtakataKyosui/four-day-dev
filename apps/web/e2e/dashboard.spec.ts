@@ -34,8 +34,9 @@ test.describe("ダッシュボード", () => {
     await page.goto("/dashboard");
 
     await expect(page.getByText("健康分析")).toBeVisible();
-    // overall_score: 78
-    await expect(page.getByText("78", { exact: true })).toBeVisible();
+    // ダッシュボードの分析スコアは "78/100" 形式で表示されるため toContainText を使用
+    const analysisCard = page.locator(".bg-card").filter({ hasText: "健康分析" });
+    await expect(analysisCard.locator(".text-2xl")).toContainText("78");
   });
 
   test("食事詳細ページへのリンクが機能する", async ({ page }) => {
@@ -45,8 +46,8 @@ test.describe("ダッシュボード", () => {
     const mealsCard = page.locator(".bg-card").filter({ hasText: "今日の食事" });
     await mealsCard.getByText("詳細").click();
 
-    await page.waitForURL("/meals");
-    await expect(page).toHaveURL("/meals");
+    await page.waitForURL("/meals/");
+    await expect(page).toHaveURL("/meals/");
   });
 
   test("睡眠詳細ページへのリンクが機能する", async ({ page }) => {
@@ -56,8 +57,8 @@ test.describe("ダッシュボード", () => {
     const sleepCard = page.locator(".bg-card").filter({ hasText: "昨夜の睡眠" });
     await sleepCard.getByText("詳細").click();
 
-    await page.waitForURL("/sleep");
-    await expect(page).toHaveURL("/sleep");
+    await page.waitForURL("/sleep/");
+    await expect(page).toHaveURL("/sleep/");
   });
 
   test("健康分析ページへのリンクが機能する", async ({ page }) => {
@@ -67,7 +68,7 @@ test.describe("ダッシュボード", () => {
     const analysisCard = page.locator(".bg-card").filter({ hasText: "健康分析" });
     await analysisCard.getByText("詳細").click();
 
-    await page.waitForURL("/analysis");
-    await expect(page).toHaveURL("/analysis");
+    await page.waitForURL("/analysis/");
+    await expect(page).toHaveURL("/analysis/");
   });
 });

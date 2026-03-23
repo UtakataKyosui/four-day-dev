@@ -60,5 +60,5 @@ database:
 
 auth:
   jwt:
-    secret: T0WpHNMYm7MwLnrFeA29
+    secret: {{ get_env(name="APP_JWT_SECRET", default="dev-secret-change-in-production") }}
     expiration: 604800

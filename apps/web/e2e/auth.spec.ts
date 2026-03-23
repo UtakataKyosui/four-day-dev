@@ -22,8 +22,8 @@ test.describe("認証", () => {
     await page.getByLabel("パスワード").fill("password123");
     await page.getByRole("button", { name: "ログイン" }).click();
 
-    await page.waitForURL("/dashboard");
-    await expect(page).toHaveURL("/dashboard");
+    await page.waitForURL("/dashboard/");
+    await expect(page).toHaveURL("/dashboard/");
   });
 
   test("無効な認証情報 → エラーメッセージ表示", async ({ page }) => {
@@ -35,7 +35,7 @@ test.describe("認証", () => {
     await page.getByRole("button", { name: "ログイン" }).click();
 
     await expect(page.getByText("メールアドレスまたはパスワードが正しくありません")).toBeVisible();
-    await expect(page).toHaveURL("/login");
+    await expect(page).toHaveURL("/login/");
   });
 
   test("未認証で保護ルートにアクセス → /login にリダイレクト", async ({ page }) => {
@@ -43,8 +43,8 @@ test.describe("認証", () => {
 
     await page.goto("/dashboard");
 
-    await page.waitForURL("/login");
-    await expect(page).toHaveURL("/login");
+    await page.waitForURL("/login/");
+    await expect(page).toHaveURL("/login/");
   });
 
   test("ログアウト → /login にリダイレクト", async ({ page }) => {
@@ -56,7 +56,7 @@ test.describe("認証", () => {
 
     await page.getByRole("button", { name: "ログアウト" }).click();
 
-    await page.waitForURL("/login");
-    await expect(page).toHaveURL("/login");
+    await page.waitForURL("/login/");
+    await expect(page).toHaveURL("/login/");
   });
 });
