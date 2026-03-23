@@ -86,43 +86,18 @@ pnpm test:e2e     # Playwright E2E テスト
 
 ## Leapcell デプロイ
 
-`apps/server` は Leapcell の Git 連携デプロイに載せやすい構成です。
-2026-03-20 時点の Leapcell 公式 docs でも、GitHub 接続後に対象ブランチへの push で継続デプロイする運用が案内されています。
+詳細な手順は **[docs/deploy.md](./docs/deploy.md)** を参照してください。
 
-### `apps/server` を Leapcell に載せる場合
+Leapcell 設定の概要:
 
-Leapcell では `apps/server` を 1 サービスとして切り出して作成するのが素直です。
+| 設定項目 | 値 |
+|---|---|
+| Runtime | Rust |
+| Root Directory | `apps/server` |
+| Build Command | `bash build.sh` |
+| Start Command | `cargo run --release --bin server-cli` |
 
-- Runtime: Rust
-- Root Directory: `apps/server`
-- Build Command: `cargo build --release --locked`
-- Start Command: `cargo run --release --bin server-cli`
-- Port: `PORT` を利用（アプリ側は `0.0.0.0` で bind 済み）
-
-### 推奨環境変数
-
-- `DATABASE_URL`: Leapcell から到達できる PostgreSQL 接続文字列
-- `APP_JWT_SECRET`: 本番用の十分長いランダム文字列
-- `FRONTEND_URL`: フロントエンド公開 URL
-- `ANTHROPIC_API_KEY`: Python Claude Agent SDK 実行に必要
-- `ANTHROPIC_MODEL`: 任意。未設定時は `claude-haiku-4-5-20251001`
-- `DB_MIN_CONNECTIONS`: 既定は `1`
-- `DB_MAX_CONNECTIONS`: 既定は `5`
-
-### この設定が必要な理由
-
-- `PORT`: [production.yaml](./apps/server/config/production.yaml) で `PORT` を読む
-- `FRONTEND_URL`: CORS 許可 origin とホスト名に使う
-- `DATABASE_URL`: 本番 DB 接続に使う
-- `APP_JWT_SECRET`: JWT 署名に使う
-- `ANTHROPIC_API_KEY`: [health_analysis.rs](./apps/server/src/workers/health_analysis.rs) から PyO3 経由で呼ぶ Python agent が利用する
-- `ANTHROPIC_MODEL`: Python agent の使用モデルを上書きする
-
-### 運用メモ
-
-- Leapcell 側の継続デプロイを使うなら、GitHub Actions は CI に寄せて `main` を保護する運用が合う
-- `FRONTEND_URL` は Loco から配信するフロントエンドの本番 URL と一致させる
-- 本番では Rust ランタイムに加えて Python と `claude-agent-sdk` のインストールが必要
+`build.sh` が Web ビルド・Python 依存インストール・Rust ビルドを一括で実行します。
 
 ### Server (apps/server)
 
